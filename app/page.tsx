@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { POSTS, PROGRAMS, SITE, TRUSTEES } from "@/lib/site";
 import { Button, Container, DonateBanner, ProgramCard, Section, SectionHeading, TextLink } from "@/components/ui";
@@ -94,16 +95,18 @@ export default function Home() {
       <Section>
         <Container>
           <SectionHeading eyebrow="Our team" title="Led by" accent="our trustees" intro="The foundation is governed by its registered trustees." />
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="mx-auto grid max-w-3xl gap-4 sm:grid-cols-2">
             {TRUSTEES.map((t, i) => (
               <Reveal key={t.name} delay={i * 0.12}>
-              <div className="flex items-center gap-5 rounded-3xl bg-white p-7 transition-transform duration-300 hover:-translate-y-1 relative before:absolute before:inset-x-0 before:top-full before:h-2">
-                <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-brand-100 text-lg font-medium text-brand-700">{t.initials}</span>
-                <div>
-                  <h3 className="text-brand-950">{t.name}</h3>
-                  <p className="mt-1 text-[15px] text-zinc-600">{t.role}</p>
-                </div>
-              </div>
+                <figure className="overflow-hidden rounded-3xl bg-white p-3">
+                  <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-brand-100">
+                    <Image src={t.photo} alt={`${t.name}, ${t.role}`} fill sizes="(min-width: 768px) 384px, 90vw" className="object-cover" style={{ objectPosition: t.position }} />
+                  </div>
+                  <figcaption className="px-3 pb-3 pt-5">
+                    <h3 className="text-brand-950">{t.name}</h3>
+                    <p className="mt-1 text-[15px] text-zinc-600">{t.role}</p>
+                  </figcaption>
+                </figure>
               </Reveal>
             ))}
           </div>

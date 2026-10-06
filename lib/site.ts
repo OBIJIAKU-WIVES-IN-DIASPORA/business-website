@@ -181,6 +181,6 @@ export const CAUSES = [
 ] as const;
 
 export const TRUSTEES = [
-  { name: "Jacinta Ada Obijiaku", role: "Chairman & Trustee", initials: "JO" },
-  { name: "Regina Adaobi Obijiaku", role: "Trustee & Secretary", initials: "RO" },
+  { name: "Jacinta Ada Obijiaku", role: "Chairman & Trustee", initials: "JO", photo: "/images/trustees/jacinta-ada-obijiaku.webp", position: "50% 35%" },
+  { name: "Regina Adaobi Obijiaku", role: "Trustee & Secretary", initials: "RO", photo: "/images/trustees/regina-adaobi-obijiaku.webp", position: "50% 25%" },
 ];

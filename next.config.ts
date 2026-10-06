@@ -2,6 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Serve AVIF to browsers that support it, WebP otherwise; originals stay untouched.
+  images: { formats: ["image/avif", "image/webp"] },
   async headers() {
     return [
       {

@@ -7,7 +7,7 @@ import { HERO_ACCENT, HERO_SRC, hasHeroPhoto, script } from "@/lib/hero";
 export default function PageHero({ title, accent, intro, breadcrumbs = true }: { title: string; breadcrumbs?: boolean; accent?: string; intro?: string }) {
   return (
     <section>
-      <div className="relative isolate flex min-h-[460px] items-center justify-center overflow-hidden rounded-3xl bg-brand-900 sm:min-h-[540px]">
+      <div className="relative isolate flex min-h-[460px] items-center justify-center overflow-hidden rounded-b-3xl bg-brand-900 sm:min-h-[540px]">
         {hasHeroPhoto && <Image src={HERO_SRC} alt="" fill priority sizes="100vw" className="-z-20 object-cover" />}
         <div className="absolute inset-0 -z-10 bg-black/45" />
         <div className="mx-auto flex w-full max-w-4xl flex-col items-center px-6 pb-12 pt-28 text-center">

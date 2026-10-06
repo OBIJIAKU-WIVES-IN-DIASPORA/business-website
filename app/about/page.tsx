@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { SITE, TRUSTEES } from "@/lib/site";
 import { Container, DonateBanner, PageHero } from "@/components/ui";
 
@@ -35,9 +36,14 @@ export default function About() {
           <h2 className="text-brand-950">Our trustees</h2>
           <ul className="mt-6 grid gap-4 sm:grid-cols-2">
             {TRUSTEES.map((t) => (
-              <li key={t.name} className="rounded-3xl bg-white p-5">
-                <p className="font-medium text-brand-950">{t.name}</p>
-                <p className="text-sm text-zinc-600">{t.role}</p>
+              <li key={t.name} className="flex items-center gap-4 rounded-3xl bg-white p-5">
+                <span className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full bg-brand-100">
+                  <Image src={t.photo} alt="" fill sizes="64px" className="object-cover" style={{ objectPosition: t.position }} />
+                </span>
+                <div>
+                  <p className="font-medium text-brand-950">{t.name}</p>
+                  <p className="text-sm text-zinc-600">{t.role}</p>
+                </div>
               </li>
             ))}
           </ul>
