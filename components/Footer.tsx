@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { NAV, PROGRAMS, SITE } from "@/lib/site";
 import { Container } from "./ui";
+import Logo from "./Logo";
 
 export default function Footer() {
   return (
     <footer className="bg-brand-950 text-brand-100">
       <Container className="grid gap-10 py-14 md:grid-cols-4">
         <div className="md:col-span-1">
-          <p className="text-xl font-medium text-white">{SITE.shortName}</p>
+          <Logo className="h-16" />
           <p className="mt-3 text-sm leading-6">{SITE.tagline}</p>
           <p className="mt-4 text-xs text-brand-100/70">Registered Incorporated Trustee, CAC IT No. {SITE.itNumber}</p>
         </div>

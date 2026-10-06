@@ -12,11 +12,10 @@ export const metadata: Metadata = {
 export default async function Donate({ searchParams }: PageProps<"/donate">) {
   const sp = await searchParams;
   const cause = typeof sp.cause === "string" && CAUSES.some((c) => c.id === sp.cause) ? sp.cause : "all";
-  const frequency = sp.frequency === "monthly" ? "monthly" : "once";
   return (
     <>
       <PageHero title="Your gift" accent="changes lives" intro="Choose the cause closest to your heart. Every contribution goes to the people we serve." />
-      <section className="py-14 sm:py-20"><Container><DonateForm initialCause={cause} initialFrequency={frequency} /></Container></section>
+      <section className="py-14 sm:py-20"><Container><DonateForm initialCause={cause} /></Container></section>
     </>
   );
 }

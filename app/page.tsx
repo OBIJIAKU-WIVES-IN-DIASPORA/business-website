@@ -7,13 +7,13 @@ import Hero from "@/components/Hero";
 import Reveal from "@/components/Reveal";
 
 export const metadata: Metadata = {
-  title: { absolute: `${SITE.name} | Care for widows, orphans, the elderly & the sick` },
+  title: { absolute: `${SITE.name} | Nigerian Charity` },
   alternates: { canonical: "/" },
 };
 
 const STATS = [
   { value: "4", label: "Groups we serve" },
-  { value: "6", label: "Care programs" },
+  { value: "7", label: "Care programs" },
   { value: "CAC", label: `Registered, IT No. ${SITE.itNumber}` },
   { value: "2026", label: "Year founded" },
 ];
@@ -27,7 +27,7 @@ const VALUES = [
 
 const WAYS = [
   ["Give once", "A single gift directed to the cause you care about most.", "/donate"],
-  ["Give monthly", "Regular giving lets us plan and help people for longer.", "/donate?frequency=monthly"],
+  ["Choose a cause", "Direct your gift to education, healthcare, skills or another program.", "/donate"],
   ["Give your time", "Volunteer your skills, your voice or your hands.", "/volunteer"],
 ];
 
@@ -63,7 +63,7 @@ export default function Home() {
         <Container>
           <SectionHeading
             eyebrow="Our programs"
-            title="Six ways we help,"
+            title="Seven ways we help,"
             accent="one aim: independence"
             intro="From school fees to start-up support, each program meets an urgent need and builds toward a steadier future."
             action={<TextLink href="/programs">All programs</TextLink>}
@@ -97,7 +97,7 @@ export default function Home() {
           <div className="grid gap-4 sm:grid-cols-2">
             {TRUSTEES.map((t, i) => (
               <Reveal key={t.name} delay={i * 0.12}>
-              <div className="flex items-center gap-5 rounded-3xl bg-white p-7 transition-transform duration-300 hover:-translate-y-1">
+              <div className="flex items-center gap-5 rounded-3xl bg-white p-7 transition-transform duration-300 hover:-translate-y-1 relative before:absolute before:inset-x-0 before:top-full before:h-2">
                 <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-brand-100 text-lg font-medium text-brand-700">{t.initials}</span>
                 <div>
                   <h3 className="text-brand-950">{t.name}</h3>
@@ -117,7 +117,7 @@ export default function Home() {
             {WAYS.map(([t, d, h], i) => (
               <Reveal key={t} delay={i * 0.12} className="h-full">
               <Link href={h}
-                className={`group flex h-full min-h-64 flex-col justify-between rounded-3xl p-7 transition-all duration-300 hover:-translate-y-1 ${i === 0 ? "bg-brand-700 text-white hover:bg-brand-900" : "bg-white hover:bg-brand-50"}`}>
+                className={`group flex h-full min-h-64 flex-col justify-between rounded-3xl p-7 transition-all duration-300 hover:-translate-y-1 relative before:absolute before:inset-x-0 before:top-full before:h-2 ${i === 0 ? "bg-brand-700 text-white hover:bg-brand-900" : "bg-white hover:bg-brand-50"}`}>
                 <span className={`flex h-10 w-10 items-center justify-center rounded-full ${i === 0 ? "bg-white/15" : "bg-brand-50 text-brand-700"}`}>
                   <Icon name="arrow" className="h-4 w-4 -rotate-45 transition-transform group-hover:rotate-0" />
                 </span>

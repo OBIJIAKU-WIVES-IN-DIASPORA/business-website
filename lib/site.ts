@@ -4,7 +4,7 @@
 
 export const SITE = {
   name: "Obijiaku Wives in Diaspora Care Foundation",
-  shortName: "Obijiaku Care Foundation",
+  shortName: "Obijiaku Wives in Diaspora Care Foundation",
   // TODO: replace with the real domain once purchased (e.g. https://www.obijiakucare.org)
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.obijiakucare.org",
   tagline: "Holistic humanitarian support for widows, orphans, the elderly and the sick.",
@@ -42,7 +42,7 @@ export const NAV = [
 export type Program = {
   slug: string;
   title: string;
-  icon: "education" | "health" | "skills" | "business" | "widows" | "elderly";
+  icon: "education" | "health" | "skills" | "business" | "widows" | "family" | "elderly";
   short: string;
   body: string[];
   how: string[];
@@ -111,6 +111,18 @@ export const PROGRAMS: Program[] = [
     beneficiaries: "Widows",
   },
   {
+    slug: "single-parents-empowerment",
+    title: "Single Parents Empowerment",
+    icon: "family",
+    short: "Support for single fathers and single mothers raising children on their own.",
+    body: [
+      "Raising children alone is hard, especially when money is tight. We stand with single fathers and single mothers so that their children can still thrive.",
+      "The programme connects single parents to our skills training and micro-business support, so they can earn a steady income and provide for their families.",
+    ],
+    how: ["Skills training and micro-business support", "Help keeping children in school", "Community, guidance and encouragement"],
+    beneficiaries: "Single fathers and single mothers",
+  },
+  {
     slug: "elderly-care",
     title: "Care for the Elderly",
     icon: "elderly",
@@ -164,6 +176,7 @@ export const CAUSES = [
   { id: "skills", label: "Skills training", programme: "vocational-skills" },
   { id: "business", label: "Micro-business", programme: "micro-business-empowerment" },
   { id: "widows", label: "Widows", programme: "widows-support" },
+  { id: "single-parents", label: "Single parents", programme: "single-parents-empowerment" },
   { id: "elderly", label: "Elderly care", programme: "elderly-care" },
 ] as const;
 

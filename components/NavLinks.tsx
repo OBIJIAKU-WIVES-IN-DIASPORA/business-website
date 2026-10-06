@@ -14,7 +14,7 @@ export default function NavLinks() {
             key={n.href}
             href={n.href}
             aria-current={active ? "page" : undefined}
-            className={`relative py-1 transition ${active ? "font-medium text-white" : "text-white/75 hover:text-white"}`}
+            className={`relative cursor-pointer py-1 transition ${active ? "font-medium text-white" : "text-white/75 hover:text-white"}`}
           >
             {n.label}
             {active && <span className="absolute inset-x-0 -bottom-1.5 h-0.5 rounded-full bg-donate" />}

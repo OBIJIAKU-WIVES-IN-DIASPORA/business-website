@@ -17,7 +17,7 @@ export function Button({ href, children, variant = "primary", className = "" }: 
     light: "border border-white/70 text-white hover:bg-white/10",
   }[variant];
   return (
-    <Link href={href} className={`inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium transition-colors ${styles} ${className}`}>
+    <Link href={href} className={`inline-flex cursor-pointer items-center justify-center rounded-full px-6 py-3 text-sm font-medium transition-colors ${styles} ${className}`}>
       {children}
     </Link>
   );
@@ -71,7 +71,7 @@ export function Visual({ icon = "heart", className = "" }: { icon?: Program["ico
 export function ProgramCard({ p, index = 0 }: { p: Program; index?: number }) {
   return (
     <Reveal delay={(index % 3) * 0.1} className="h-full">
-    <Link href={`/programs/${p.slug}`} className="group flex h-full flex-col rounded-3xl bg-white p-7 transition-all duration-300 hover:-translate-y-1 hover:bg-brand-50 hover:shadow-lg hover:shadow-brand-950/5">
+    <Link href={`/programs/${p.slug}`} className="group flex h-full flex-col rounded-3xl bg-white p-7 transition-all duration-300 hover:-translate-y-1 relative before:absolute before:inset-x-0 before:top-full before:h-2 hover:bg-brand-50 hover:shadow-lg hover:shadow-brand-950/5">
       <span className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-50 text-brand-700 group-hover:bg-white">
         <Icon name={p.icon} className="h-5 w-5" />
       </span>

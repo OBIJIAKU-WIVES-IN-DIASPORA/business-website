@@ -24,7 +24,7 @@ const ACCENT = "#a9c0ea"; // light periwinkle used for the script + stroke
 export default function Hero() {
   return (
     <section className="">
-      <div className="relative isolate flex h-[calc(100vh-1.5rem)] min-h-[640px] flex-col overflow-hidden rounded-3xl bg-brand-900">
+      <div className="relative isolate flex h-[calc(100vh-1.5rem)] min-h-[640px] flex-col overflow-hidden rounded-b-3xl bg-brand-900">
         {hasPhoto && (
           <Image src={HERO_SRC} alt="" fill priority sizes="100vw" className="-z-20 object-cover" />
         )}

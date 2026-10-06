@@ -11,7 +11,7 @@ const inter = Inter({ variable: "--font-inter", subsets: ["latin"], display: "sw
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
-  title: { default: `${SITE.name} | Care for widows, orphans, the elderly & the sick`, template: `%s | ${SITE.shortName}` },
+  title: { default: `${SITE.name} | Nigerian Charity`, template: `%s | ${SITE.shortName}` },
   description: SITE.description,
   applicationName: SITE.name,
   keywords: [
@@ -37,6 +37,7 @@ const orgLd = {
   description: SITE.description,
   email: SITE.email,
   telephone: SITE.phoneHref,
+  logo: `${SITE.url}/brand/logo-green.png`,
   identifier: `CAC IT No. ${SITE.itNumber}`,
   address: {
     "@type": "PostalAddress",

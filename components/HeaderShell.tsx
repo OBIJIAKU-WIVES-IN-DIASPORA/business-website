@@ -12,7 +12,7 @@ export default function HeaderShell({ children }: { children: ReactNode }) {
   }, []);
   return (
     <header
-      className={`fixed z-50 flex w-full items-center justify-between border-b text-sm text-white backdrop-blur-md transition-colors duration-300 ${
+      className={`fixed z-50 flex w-full items-center justify-between text-sm text-white transition-colors duration-300 ${
         scrolled ? "border-white/10 bg-brand-950/95 shadow-lg shadow-black/10" : "border-white/15 bg-gradient-to-b from-black/30 to-transparent"
       }`}
     >
