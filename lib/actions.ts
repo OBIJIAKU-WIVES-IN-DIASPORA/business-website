@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { CAUSES, SITE } from "./site";
+import { CAUSES, SITE, donationsPaused } from "./site";
 import { CURRENCIES, formatMoney, isCurrency } from "./currency";
 import { isCountry } from "./countries";
 import { donations } from "./db";
@@ -36,6 +36,7 @@ export async function submitVolunteer(_: FormState, fd: FormData): Promise<FormS
 }
 
 export async function startDonation(_: FormState, fd: FormData): Promise<FormState> {
+  if (donationsPaused()) return { ok: false, message: "Thank you for wanting to give! Online donations are temporarily unavailable, but will be open again very shortly. Please try again soon." };
   if (str(fd.get("website"))) return { ok: true, message: "Thank you." }; // honeypot
   const name = str(fd.get("name")), email = str(fd.get("email")).toLowerCase(), phone = str(fd.get("phone"));
   const currency = str(fd.get("currency")), cause = str(fd.get("cause")) || "all", country = str(fd.get("country"));

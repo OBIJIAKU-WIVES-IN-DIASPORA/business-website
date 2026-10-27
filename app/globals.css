@@ -87,3 +87,13 @@ body {
 /* Anything clickable shows a pointer (Tailwind v4 resets buttons to the default arrow). */
 a[href], button:not(:disabled), [role="button"], summary, select, label[for] { cursor: pointer; }
 button:disabled { cursor: not-allowed; }
+
+/* Gentle heartbeat for the "donations paused" notice (switched off by the reduced-motion rule above) */
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  14% { transform: scale(1.22); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.14); }
+  70% { transform: scale(1); }
+}
+.heartbeat { display: inline-block; animation: heartbeat 1.6s ease-in-out infinite; transform-origin: center; }
