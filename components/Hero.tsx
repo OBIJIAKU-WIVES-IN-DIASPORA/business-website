@@ -7,8 +7,8 @@ import ScriptText from "./ScriptText";
 
 const script = Caveat({ subsets: ["latin"], weight: ["500", "600"], display: "swap" });
 
-// Drop a real photograph at public/images/hero.jpg (landscape, ~2400px wide).
-const HERO_SRC = "/images/hero.jpg";
+// Drop a real photograph at public/images/hero.avif (landscape, ~2400px wide; source JPEG kept as hero.jpg).
+const HERO_SRC = "/images/hero.avif";
 const hasPhoto = existsSync(join(process.cwd(), "public", HERO_SRC));
 
 const NAV = [

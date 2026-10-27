@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { Container, DonateBanner, PageHero, Section } from "@/components/ui";
 import PhotoPanel from "@/components/PhotoPanel";
 import Reveal from "@/components/Reveal";
 import Icon from "@/components/Icon";
 
-export const metadata: Metadata = {
-  title: "Our Mission & Vision",
-  description: "Our mission is to provide holistic humanitarian support to widows, orphans, the elderly and the sick, and help them build independent, dignified lives.",
-  alternates: { canonical: "/mission" },
-};
+export const metadata: Metadata = pageMetadata({
+  title: 'Our Mission & Vision',
+  description: 'Our mission: holistic humanitarian support for widows, orphans, the elderly and the sick in Nigeria, through education, healthcare, skills and small-business help.',
+  path: '/mission',
+});
 
 const MISSION_POINTS = [
   { icon: "education", text: "Keep children in school" },

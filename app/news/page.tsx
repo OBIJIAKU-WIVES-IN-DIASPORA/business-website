@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { POSTS } from "@/lib/site";
 import { Container, PageHero } from "@/components/ui";
 
-export const metadata: Metadata = {
-  title: "News & Updates",
-  description: "Latest news, updates and stories from the Obijiaku Wives in Diaspora Care Foundation.",
-  alternates: { canonical: "/news" },
-};
+export const metadata: Metadata = pageMetadata({
+  title: 'News & Guides',
+  description: 'News from our NGO and practical guides: what an NGO is, how to check a Nigerian NGO is registered, and how to donate to Nigeria from abroad.',
+  path: '/news',
+});
 
 export default function News() {
   return (

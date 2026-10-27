@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { Container, PageHero } from "@/components/ui";
 
-export const metadata: Metadata = { title: "Terms of Use", alternates: { canonical: "/terms" } };
+export const metadata: Metadata = pageMetadata({
+  title: 'Terms of Use',
+  description: 'Terms for using the Obijiaku Wives in Diaspora Care Foundation website and making donations.',
+  path: '/terms',
+});
 
 export default function Page() {
   return (

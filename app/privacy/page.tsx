@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { Container, PageHero } from "@/components/ui";
 
-export const metadata: Metadata = { title: "Privacy Policy", alternates: { canonical: "/privacy" } };
+export const metadata: Metadata = pageMetadata({
+  title: 'Privacy Policy',
+  description: 'How Obijiaku Wives in Diaspora Care Foundation collects, uses and protects your personal information.',
+  path: '/privacy',
+});
 
 export default function Page() {
   return (

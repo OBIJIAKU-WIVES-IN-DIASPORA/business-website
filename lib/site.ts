@@ -2,14 +2,24 @@
 // Facts below come from the CAC Status Report (IT No. 9820301).
 // Items marked TODO need real values from the client before launch.
 
+// Accepts "www.example.org" or "https://www.example.org/" and always returns "https://www.example.org".
+// http:// is kept only for localhost, so a typo in the environment variable can't break the build.
+function siteUrl(raw: string | undefined): string {
+  const v = (raw ?? "").trim().replace(/\/+$/, "");
+  if (!v) return "https://www.obijiakuwivesfoundation.org";
+  if (/^https?:\/\//i.test(v)) return v;
+  return `${/^(localhost|127\.0\.0\.1)/.test(v) ? "http" : "https"}://${v}`;
+}
+
 export const SITE = {
   name: "Obijiaku Wives in Diaspora Care Foundation",
   shortName: "Obijiaku Wives in Diaspora Care Foundation",
-  // TODO: replace with the real domain once purchased (e.g. https://www.obijiakucare.org)
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.obijiakucare.org",
+  url: siteUrl(process.env.NEXT_PUBLIC_SITE_URL),
   tagline: "Holistic humanitarian support for widows, orphans, the elderly and the sick.",
   description:
-    "Obijiaku Wives in Diaspora Care Foundation is a registered Nigerian charity providing educational sponsorships, healthcare assistance, vocational skills and micro-business empowerment to widows, orphans, the elderly and the sick.",
+    "A registered NGO in Owerri, Nigeria supporting widows, orphans, single parents, the elderly and the sick with education, healthcare and skills.",
+  // Bump when page content changes materially; used for sitemap lastModified.
+  updated: "2026-10-07",
   itNumber: "9820301",
   registered: "1 September 2026",
   email: "adaobijiaku@hotmail.co.uk",
@@ -138,6 +148,7 @@ export const PROGRAMS: Program[] = [
 export type Post = {
   slug: string;
   title: string;
+  metaTitle: string; // short version for the <title> tag (keeps search results from truncating it)
   date: string; // ISO
   category: string;
   excerpt: string;
@@ -147,7 +158,55 @@ export type Post = {
 // TODO: replace with real news as the foundation's work begins.
 export const POSTS: Post[] = [
   {
+    slug: "what-is-an-ngo-in-nigeria",
+    metaTitle: "What Is an NGO in Nigeria?",
+    title: "What is an NGO? How non-governmental organisations work in Nigeria",
+    date: "2026-10-07",
+    category: "Guides",
+    excerpt: "A plain-English guide to NGOs in Nigeria: what the term means, how they register with the CAC, and what to look for before you give.",
+    body: [
+      "NGO stands for non-governmental organisation (also spelled non-governmental organization). It is an organisation that works for a social purpose, such as education, health or poverty relief. It is not part of government, and it does not exist to make profit for its owners.",
+      "In everyday speech, the words NGO, charity, foundation and non-profit are often used to mean much the same thing. What matters is not the label but whether the organisation is properly registered, led by accountable people, and open about how it uses money.",
+      "In Nigeria, many NGOs register with the Corporate Affairs Commission (CAC) as incorporated trustees under the Companies and Allied Matters Act 2020. Registration gives the organisation a legal identity, a registration (IT) number and a board of trustees who are responsible for how it is run.",
+      "NGO work in Nigeria covers a wide range: educational support for children, healthcare assistance, skills training, support for widows and orphans, care for older people, and community development. Some NGOs are small and local; others run programmes across several states.",
+      "Obijiaku Wives in Diaspora Care Foundation is registered with the CAC as an Incorporated Trustee (IT number 9820301). It supports widows, orphans, single parents, the elderly and the sick through education, healthcare, skills training and small-business support.",
+    ],
+  },
+  {
+    slug: "how-to-verify-a-registered-ngo-in-nigeria",
+    metaTitle: "How to Verify an NGO in Nigeria",
+    title: "How to check that an NGO in Nigeria is registered before you donate",
+    date: "2026-10-07",
+    category: "Guides",
+    excerpt: "Five simple checks that help you give with confidence to a Nigerian NGO or foundation.",
+    body: [
+      "Giving should feel safe. Before you donate to any NGO or foundation in Nigeria, a few quick checks can protect you and make sure your gift reaches the people it is meant for.",
+      "1. Ask for the registration number. A registered NGO should be able to tell you its Corporate Affairs Commission (CAC) incorporated trustee (IT) number. Ours is 9820301.",
+      "2. Confirm it with the CAC. The CAC keeps a public register, and an organisation can share its CAC status report. Check that the name, registered address and trustees match what the NGO tells you.",
+      "3. Look for named people and a real address. Trustworthy organisations say who runs them and where they are based, and they answer questions about both.",
+      "4. Pay through official channels only. Be cautious if you are asked to send money to a personal account, or if you are pressured to give urgently. Use the organisation's website or a bank account in the organisation's name.",
+      "5. Expect a receipt and honest reporting. A good NGO gives you a receipt, tells you how gifts are used, and publishes updates. You can read how we handle this on our Registration & Transparency page.",
+    ],
+  },
+  {
+    slug: "how-to-donate-to-nigeria-from-abroad",
+    metaTitle: "Donate to Nigeria from Abroad",
+    title: "How to donate to a charity in Nigeria from abroad",
+    date: "2026-10-07",
+    category: "Guides",
+    excerpt: "A short guide for people in the UK, US, Canada and elsewhere who want to support widows, orphans and families in Nigeria safely.",
+    body: [
+      "Many people living abroad want to support family members, communities and causes back home in Nigeria. Giving through a registered NGO means your gift is directed to a cause, you receive a receipt, and the organisation answers to a board of trustees.",
+      "Step 1: choose the cause. On our donate page you can give to education, healthcare, skills training, micro-business support, widows, single parents or elderly care, or choose \"where needed most\".",
+      "Step 2: choose your currency. You can give in Nigerian naira (NGN), US dollars (USD), British pounds (GBP) or euros (EUR), so you don't need to convert anything yourself.",
+      "Step 3: pay securely. Payments are processed by Flutterwave's secure checkout, where you can pay by card, bank transfer or other available methods. We never see or store your card details.",
+      "Step 4: keep your receipt. As soon as your payment is confirmed we email you a receipt with a receipt number. If your email doesn't arrive, check your spam folder or contact us.",
+      "A note on tax: the rules for giving to overseas charities differ from country to country. Please ask a tax adviser if you need to know how a gift to a Nigerian NGO is treated where you live.",
+    ],
+  },
+  {
     slug: "foundation-officially-registered",
+    metaTitle: "Foundation Registered with CAC",
     title: "Obijiaku Wives in Diaspora Care Foundation is officially registered",
     date: "2026-09-01",
     category: "Foundation News",
@@ -159,6 +218,7 @@ export const POSTS: Post[] = [
   },
   {
     slug: "how-your-donation-is-used",
+    metaTitle: "How Your Donation Is Used",
     title: "How your donation is used",
     date: "2026-09-15",
     category: "Transparency",

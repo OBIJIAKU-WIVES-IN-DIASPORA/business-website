@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { CAUSES } from "@/lib/site";
 import { Container, PageHero } from "@/components/ui";
 import DonateForm from "@/components/DonateForm";
 
-export const metadata: Metadata = {
-  title: "Donate",
-  description: "Give to support widows, orphans, the elderly and the sick in Nigeria. Choose a cause and give once or monthly.",
-  alternates: { canonical: "/donate" },
-};
+export const metadata: Metadata = pageMetadata({
+  title: 'Donate to a Charity in Nigeria',
+  description: 'Give securely to a registered Nigerian NGO in NGN, USD, GBP or EUR. Choose a cause, pay by card or transfer, and get an instant emailed receipt.',
+  path: '/donate',
+});
 
 export default async function Donate({ searchParams }: PageProps<"/donate">) {
   const sp = await searchParams;

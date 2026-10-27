@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { SITE } from "@/lib/site";
 import { Container, PageHero } from "@/components/ui";
 import ContactForm from "@/components/ContactForm";
 
-export const metadata: Metadata = {
-  title: "Contact Us",
-  description: `Contact ${SITE.name} in Owerri, Imo State, Nigeria by phone, email or message.`,
-  alternates: { canonical: "/contact" },
-};
+export const metadata: Metadata = pageMetadata({
+  title: 'Contact Us in Owerri, Imo State',
+  description: 'Contact Obijiaku Wives in Diaspora Care Foundation in Owerri, Imo State, Nigeria: address, phone, email and message form.',
+  path: '/contact',
+});
 
 export default function Contact() {
   return (

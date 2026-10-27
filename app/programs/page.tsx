@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { PROGRAMS } from "@/lib/site";
 import { Container, DonateBanner, PageHero, ProgramCard } from "@/components/ui";
 
-export const metadata: Metadata = {
-  title: "Our Programs",
-  description: "Educational sponsorship, healthcare assistance, vocational skills, micro-business empowerment, widows' support, single parents empowerment and elderly care in Nigeria.",
-  alternates: { canonical: "/programs" },
-};
+export const metadata: Metadata = pageMetadata({
+  title: 'Charity Programs in Nigeria',
+  description: 'Seven programs from a registered Nigerian NGO: education sponsorship, healthcare aid, skills training, micro-business, widows, single parents and elderly care.',
+  path: '/programs',
+});
 
 export default function Programs() {
   return (

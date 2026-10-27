@@ -5,11 +5,15 @@ import { POSTS, PROGRAMS, SITE, TRUSTEES } from "@/lib/site";
 import { Button, Container, DonateBanner, ProgramCard, Section, SectionHeading, TextLink } from "@/components/ui";
 import Icon from "@/components/Icon";
 import Hero from "@/components/Hero";
+import { OG_ALT, OG_IMAGE } from "@/lib/seo";
 import Reveal from "@/components/Reveal";
 
 export const metadata: Metadata = {
-  title: { absolute: `${SITE.name} | Nigerian Charity` },
+  title: { absolute: `${SITE.name} | NGO in Nigeria` },
+  description: SITE.description,
   alternates: { canonical: "/" },
+  openGraph: { type: "website", url: "/", siteName: SITE.name, locale: "en_NG", title: `${SITE.name} | NGO in Nigeria`, description: SITE.description, images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: OG_ALT, type: "image/jpeg" }] },
+  twitter: { card: "summary_large_image", images: [OG_IMAGE] },
 };
 
 const STATS = [
@@ -43,11 +47,11 @@ export default function Home() {
         <Container className="grid gap-14 lg:grid-cols-2 lg:gap-20">
           <Reveal>
             <p className="mb-4 text-sm font-medium text-brand-700">Who we are</p>
-            <h2 className="text-brand-950">Practical help for people who are too often overlooked</h2>
+            <h2 className="text-brand-950">A registered NGO in Nigeria helping people who are too often overlooked</h2>
             <p className="lead mt-6 text-zinc-600">
-              {SITE.name} is a registered charity providing holistic humanitarian support to widows, orphans, the elderly and the sick, through educational sponsorships, healthcare assistance, vocational skills and micro-business empowerment.
+              {SITE.name} is a registered non-governmental organization (NGO) in Owerri, Imo State, Nigeria. We provide holistic humanitarian support to widows, orphans, single parents, the elderly and the sick through educational sponsorships, healthcare assistance, vocational skills and micro-business empowerment.
             </p>
-            <div className="mt-8"><Button href="/about">More about us</Button></div>
+            <div className="mt-8 flex flex-wrap items-center gap-4"><Button href="/about">More about us</Button><TextLink href="/transparency">Our registration &amp; transparency</TextLink></div>
           </Reveal>
           <dl className="grid grid-cols-2 gap-x-8 gap-y-10 self-center">
             {STATS.map((s, i) => (
