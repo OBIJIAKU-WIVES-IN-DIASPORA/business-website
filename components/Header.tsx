@@ -13,7 +13,7 @@ export default function Header() {
           </div>
 
           <div className="flex items-center gap-2 pr-4 sm:gap-4 sm:pr-6">
-            <Link href="/contact" className="hidden cursor-pointer text-white/85 transition hover:text-white sm:block">Contact us</Link>
+            <Link href="/contact" className="hidden cursor-pointer py-2.5 text-white/85 transition hover:text-white sm:block">Contact us</Link>
             <Link
               href="/donate"
               className="flex cursor-pointer items-center gap-2 rounded-full bg-donate px-5 py-2.5 font-semibold text-brand-950 shadow-sm transition hover:bg-donate-dark"

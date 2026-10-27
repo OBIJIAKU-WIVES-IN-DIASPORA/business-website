@@ -51,7 +51,7 @@ export function SectionHeading({ eyebrow, title, accent, intro, light = false, c
 
 export function TextLink({ href, children }: { href: string; children: ReactNode }) {
   return (
-    <Link href={href} className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-700 hover:underline">
+    <Link href={href} className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap py-2 text-sm font-medium text-brand-700 hover:underline">
       {children} <Icon name="arrow" className="h-4 w-4" />
     </Link>
   );
