@@ -12,7 +12,7 @@ export const metadata: Metadata = pageMetadata({
 export default function Programs() {
   return (
     <>
-      <PageHero title="How we" accent="help" intro="Seven programs working together to meet urgent needs and build lasting independence." />
+      <PageHero image="education-alt" title="How we" accent="help" intro="Seven programs working together to meet urgent needs and build lasting independence." />
       <section className="py-16 sm:py-20">
         <Container className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {PROGRAMS.map((p, i) => <ProgramCard key={p.slug} p={p} index={i} />)}

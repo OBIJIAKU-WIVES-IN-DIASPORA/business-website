@@ -33,7 +33,7 @@ const COMMITMENTS = [
 export default function Mission() {
   return (
     <>
-      <PageHero title="Our mission," accent="our promise" intro="What we do each day, and the future we are working toward." />
+      <PageHero image="mission" title="Our mission," accent="our promise" intro="What we do each day, and the future we are working toward." />
 
       <Section>
         <Container className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">

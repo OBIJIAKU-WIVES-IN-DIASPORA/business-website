@@ -28,14 +28,17 @@ export default function Hero() {
         {hasPhoto && (
           <Image src={HERO_SRC} alt="" fill priority sizes="100vw" className="-z-20 object-cover" />
         )}
-        <div className="absolute inset-0 -z-10 bg-black/45" />
+        <div className="absolute inset-0 -z-10 bg-black/40" />
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_75%_68%_at_50%_58%,rgba(8,24,14,0.68),transparent_75%)]" />
+        <div className="absolute inset-x-0 top-0 -z-10 h-40 bg-gradient-to-b from-black/55 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 -z-10 h-1/3 bg-gradient-to-t from-black/40 to-transparent" />
 
         {/* Nav bar */}
 
         {/* Centered headline + script flourish */}
         <div className="relative z-10 flex flex-1 items-center justify-center px-6">
           <div className="relative w-full max-w-5xl pb-28 sm:pb-36">
-            <h1 className="mx-auto max-w-4xl text-center text-4xl font-medium leading-[1.05] tracking-[-0.03em] text-white sm:text-6xl lg:text-7xl">
+            <h1 className="mx-auto max-w-4xl text-center text-4xl font-medium leading-[1.05] tracking-[-0.03em] text-white [text-shadow:0_2px_24px_rgba(0,0,0,0.55)] sm:text-6xl lg:text-7xl">
               Together we support widows, orphans and the sick
             </h1>
 
@@ -57,7 +60,7 @@ export default function Hero() {
             </svg>
 
             <p
-              className={`${script.className} pointer-events-none absolute bottom-0 left-1/2 w-72 -translate-x-1/2 -rotate-3 text-center text-5xl leading-[0.95] sm:bottom-2 sm:left-[24%] sm:w-auto sm:translate-x-0 sm:text-left sm:text-7xl`}
+              className={`${script.className} pointer-events-none absolute [text-shadow:0_2px_16px_rgba(0,0,0,0.6)] bottom-0 left-1/2 w-72 -translate-x-1/2 -rotate-3 text-center text-5xl leading-[0.95] sm:bottom-2 sm:left-[24%] sm:w-auto sm:translate-x-0 sm:text-left sm:text-7xl`}
               
             >
               <ScriptText text="caring for" delay={0.8} color={ACCENT} />

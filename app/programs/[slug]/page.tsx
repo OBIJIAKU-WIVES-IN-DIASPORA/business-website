@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { CAUSES, PROGRAMS, SITE } from "@/lib/site";
 import { pageMetadata } from "@/lib/seo";
+import { PROGRAM_HERO } from "@/lib/hero";
 import { Button, Container, DonateBanner, PageHero } from "@/components/ui";
 import Icon from "@/components/Icon";
 
@@ -24,7 +25,7 @@ export default async function ProgramPage({ params }: PageProps<"/programs/[slug
   const cause = CAUSES.find((c) => c.programme === p.slug);
   return (
     <>
-      <PageHero title={p.title} intro={p.short} />
+      <PageHero title={p.title} intro={p.short} image={PROGRAM_HERO[p.slug] ?? "default"} />
       <section className="py-16">
         <Container className="grid gap-10 lg:grid-cols-3">
           <div className="space-y-5 text-lg leading-8 text-zinc-700 lg:col-span-2">

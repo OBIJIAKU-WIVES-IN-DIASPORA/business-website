@@ -13,7 +13,7 @@ export const metadata: Metadata = pageMetadata({
 export default function Volunteer() {
   return (
     <>
-      <PageHero title="Give your time," accent="change a life" intro="Whatever your skills, there is a way for you to help." />
+      <PageHero image="volunteer" title="Give your time," accent="change a life" intro="Whatever your skills, there is a way for you to help." />
       <section className="py-14 sm:py-20">
         <Container className="grid gap-12 lg:grid-cols-2">
           <div className="space-y-4 text-lg leading-8 text-zinc-700">

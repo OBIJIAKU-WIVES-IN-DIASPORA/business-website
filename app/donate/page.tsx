@@ -15,7 +15,7 @@ export default async function Donate({ searchParams }: PageProps<"/donate">) {
   const cause = typeof sp.cause === "string" && CAUSES.some((c) => c.id === sp.cause) ? sp.cause : "all";
   return (
     <>
-      <PageHero title="Your gift" accent="changes lives" intro="Choose the cause closest to your heart. Every contribution goes to the people we serve." />
+      <PageHero image="family" title="Your gift" accent="changes lives" intro="Choose the cause closest to your heart. Every contribution goes to the people we serve." />
       <section className="py-14 sm:py-20"><Container><DonateForm initialCause={cause} /></Container></section>
     </>
   );
