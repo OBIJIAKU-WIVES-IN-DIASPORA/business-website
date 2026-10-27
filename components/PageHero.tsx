@@ -8,7 +8,7 @@ export default function PageHero({ title, accent, intro, breadcrumbs = true, ima
   const hero = HEROES[image];
   return (
     <section>
-      <div className="relative isolate flex min-h-[480px] items-center justify-center overflow-hidden rounded-b-3xl bg-brand-900 sm:min-h-[600px]">
+      <div className="relative isolate flex min-h-[480px] items-center justify-center overflow-hidden rounded-b-3xl bg-brand-900 sm:min-h-[85vh]">
         {hasHeroPhoto && <Image src={hero.src} alt={hero.alt} fill priority sizes="100vw" className="-z-20 object-cover" style={{ objectPosition: hero.pos }} />}
         <div className="absolute inset-0 -z-10 bg-black/40" />
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_75%_68%_at_50%_58%,rgba(8,24,14,0.68),transparent_75%)]" />
