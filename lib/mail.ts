@@ -1,6 +1,6 @@
 import { optionalEnv } from "./env";
-import { SITE } from "./site";
-import { formatMoney } from "./currency";
+import { BANK, SITE } from "./site";
+import { formatMoney, isCurrency } from "./currency";
 import { countryName } from "./countries";
 import type { Donation } from "./db";
 
@@ -41,6 +41,49 @@ export async function sendReceipt(d: Donation): Promise<void> {
   const res = await fetch(optionalEnv("RESEND_API_URL") ?? "https://api.resend.com/emails", {
     method: "POST",
     headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json", "Idempotency-Key": `receipt-${d.receiptNo}` },
+    body: JSON.stringify({ from, to: [d.donor.email], ...(notify ? { bcc: [notify] } : {}), reply_to: SITE.email, subject, html, text }),
+  });
+  if (!res.ok) throw new Error(`Resend ${res.status}: ${(await res.text()).slice(0, 200)}`);
+}
+
+// Sent right after a donor logs a bank-transfer gift: the exact account for their currency and the reference to quote.
+export function transferEmail(d: Donation) {
+  const cur = isCurrency(d.currency) ? d.currency : "NGN";
+  const amount = formatMoney(d.amountMinor / 100, d.currency);
+  const foreign = cur !== "NGN";
+  const rows: [string, string][] = [
+    ["Bank", BANK.name], ["Account name", BANK.accountName], [`Account number (${cur})`, BANK.accounts[cur]],
+    ["Sort code", BANK.sortCode], ...(foreign ? [["SWIFT code", BANK.swift] as [string, string]] : []), ["Bank address", BANK.address],
+    ["Amount to send", amount], ["Payment reference", d.txRef],
+  ];
+  const first = d.donor.name && d.donor.name !== "Friend" ? d.donor.name.split(" ")[0] : "friend";
+  const html = `<!doctype html><html><body style="margin:0;background:#f4f2e8;font-family:Arial,Helvetica,sans-serif;color:#17261c">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:32px 16px">
+<table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;background:#fff;border-radius:16px;overflow:hidden">
+<tr><td style="background:#1f4a31;color:#fff;padding:28px 32px"><img src="${SITE.url}/brand/logo-white.png" alt="${esc(SITE.name)}" width="300" style="display:block;border:0;max-width:100%;height:auto"><div style="font-size:13px;opacity:.8;margin-top:12px">Bank transfer details</div></td></tr>
+<tr><td style="padding:32px">
+<h1 style="font-size:24px;margin:0 0 12px;font-weight:600">Thank you, ${esc(first)} 💚</h1>
+<p style="font-size:15px;line-height:1.6;margin:0 0 20px;color:#3a4a40">We are so grateful for your gift of <strong>${esc(amount)}</strong> toward <strong>${esc(d.causeLabel)}</strong>. Here is where to send it.</p>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;border-top:1px solid #e3e0d2">
+${rows.map(([k, v]) => `<tr><td style="padding:10px 0;border-bottom:1px solid #e3e0d2;color:#6b756e">${esc(k)}</td><td style="padding:10px 0;border-bottom:1px solid #e3e0d2;text-align:right;font-weight:600">${esc(v)}</td></tr>`).join("")}
+</table>
+<p style="font-size:14px;line-height:1.6;margin:20px 0 0"><strong>Please put your payment reference (${esc(d.txRef)}) in the transfer narration</strong> so we can match your gift. When it arrives we will email your receipt.</p>
+<p style="font-size:13px;line-height:1.6;color:#6b756e;margin:16px 0 0">Questions? Reply to this email or write to ${esc(SITE.email)}. Please only use the account details above, which match our website.</p>
+</td></tr>
+<tr><td style="background:#f4f2e8;padding:20px 32px;font-size:12px;color:#6b756e">${esc(SITE.name)}<br>Registered Incorporated Trustee, CAC IT No. ${esc(SITE.itNumber)}</td></tr>
+</table></td></tr></table></body></html>`;
+  const text = `Thank you, ${first}!\n\nWe are grateful for your gift of ${amount} toward ${d.causeLabel}. Please send it to:\n\n${rows.map(([k, v]) => `${k}: ${v}`).join("\n")}\n\nPut your payment reference (${d.txRef}) in the transfer narration. We will email your receipt when it arrives.\n\n${SITE.name}\nCAC IT No. ${SITE.itNumber}`;
+  return { html, text, subject: `Your bank transfer details. Reference ${d.txRef}` };
+}
+
+export async function sendTransferInstructions(d: Donation): Promise<void> {
+  const key = optionalEnv("RESEND_API_KEY"), from = optionalEnv("MAIL_FROM");
+  if (!key || !from) throw new Error("Email is not configured (RESEND_API_KEY / MAIL_FROM).");
+  const { html, text, subject } = transferEmail(d);
+  const notify = optionalEnv("NOTIFY_EMAIL");
+  const res = await fetch(optionalEnv("RESEND_API_URL") ?? "https://api.resend.com/emails", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json", "Idempotency-Key": `transfer-${d.txRef}` },
     body: JSON.stringify({ from, to: [d.donor.email], ...(notify ? { bcc: [notify] } : {}), reply_to: SITE.email, subject, html, text }),
   });
   if (!res.ok) throw new Error(`Resend ${res.status}: ${(await res.text()).slice(0, 200)}`);

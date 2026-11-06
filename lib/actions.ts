@@ -4,7 +4,9 @@ import { redirect } from "next/navigation";
 import { CAUSES, SITE, donationsPaused } from "./site";
 import { CURRENCIES, formatMoney, isCurrency } from "./currency";
 import { isCountry } from "./countries";
+import { randomInt } from "node:crypto";
 import { donations } from "./db";
+import { sendTransferInstructions } from "./mail";
 import { newTxRef } from "./donations";
 import { createPaymentLink } from "./flutterwave";
 
@@ -12,7 +14,7 @@ import { createPaymentLink } from "./flutterwave";
 // TODO: connect to an email service (e.g. Resend) or database so submissions reach the foundation.
 // Until then submissions are only logged on the server.
 
-export type FormState = { ok: boolean; message: string };
+export type FormState = { ok: boolean; message: string; reference?: string; emailed?: boolean };
 
 const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const str = (v: FormDataEntryValue | null) => (typeof v === "string" ? v.trim() : "");
@@ -72,4 +74,42 @@ export async function startDonation(_: FormState, fd: FormData): Promise<FormSta
     return { ok: false, message: "Sorry, we could not start your payment. Please try again in a moment, or contact us." };
   }
   redirect(link); // to Flutterwave's hosted, PCI-compliant checkout
+}
+
+// Bank-transfer gift: log the intention, give the donor a reference to quote, and email the right account details.
+// The gift is "pending" until the foundation sees the money arrive.
+const REF_CHARS = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+const newTransferRef = () => "TRF-" + Array.from({ length: 6 }, () => REF_CHARS[randomInt(REF_CHARS.length)]).join("");
+
+export async function pledgeTransfer(_: FormState, fd: FormData): Promise<FormState> {
+  if (str(fd.get("website"))) return { ok: true, message: "Thank you." }; // honeypot
+  const email = str(fd.get("email")).toLowerCase(), name = str(fd.get("name")).slice(0, 100);
+  const currency = str(fd.get("currency")), cause = str(fd.get("cause")) || "all";
+  const amount = Math.round(Number(str(fd.get("amount"))) * 100) / 100;
+
+  if (!emailRe.test(email) || email.length > 200) return { ok: false, message: "Please enter a valid email address. We send your transfer details and receipt there." };
+  if (!isCurrency(currency)) return { ok: false, message: "Please choose a currency." };
+  const min = CURRENCIES[currency].min;
+  if (!Number.isFinite(amount) || amount < min || amount > 100_000_000) return { ok: false, message: `The minimum gift is ${formatMoney(min, currency)}.` };
+  const causeDef = CAUSES.find((c) => c.id === cause);
+  if (cause !== "all" && !causeDef) return { ok: false, message: "Please choose a cause." };
+
+  try {
+    const col = await donations();
+    const recent = await col.countDocuments({ "donor.email": email, method: "bank-transfer", createdAt: { $gt: new Date(Date.now() - 3_600_000) } });
+    if (recent >= 5) return { ok: false, message: "You have logged several gifts in the last hour. Please check your email, or try again a little later." };
+
+    const donation = {
+      txRef: newTransferRef(), status: "pending" as const, method: "bank-transfer" as const,
+      amountMinor: Math.round(amount * 100), currency, cause, causeLabel: causeDef?.label ?? "Where needed most",
+      donor: { name: name || "Friend", email }, country: "XX", createdAt: new Date(),
+    };
+    await col.insertOne(donation);
+    let emailed = true;
+    try { await sendTransferInstructions(donation); } catch (e) { emailed = false; console.error("[transfer] instructions email failed", donation.txRef, e); }
+    return { ok: true, message: "", reference: donation.txRef, emailed };
+  } catch (e) {
+    console.error("[transfer] could not log gift", e);
+    return { ok: false, message: "Sorry, something went wrong on our side. Your gift was not logged. Please try again, or use the account details shown and email us." };
+  }
 }

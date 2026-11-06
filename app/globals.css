@@ -106,3 +106,7 @@ button:disabled { cursor: not-allowed; }
 a, button, summary, label, select { touch-action: manipulation; }
 /* Never let long words (emails, URLs, references) push the layout sideways. */
 main, footer { overflow-wrap: anywhere; }
+
+/* Donate page: account details slide in when the currency changes */
+@keyframes panel-swap { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.panel-swap { animation: panel-swap 0.35s cubic-bezier(0.2, 0.7, 0.2, 1); }

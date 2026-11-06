@@ -8,6 +8,7 @@ export type Donation = {
   txRef: string; // our unique reference, sent to Flutterwave
   receiptNo?: string; // assigned once payment is confirmed
   status: DonationStatus;
+  method?: "card" | "bank-transfer"; // absent on older records = card
   amountMinor: number; // kobo / cents, avoids floating point drift in totals
   currency: string;
   cause: string; // id from CAUSES, or "all"

@@ -34,8 +34,6 @@ export const SITE = {
   lagosOffice: "No. 5, Avenue T Close, House 29, Festac, Lagos State, Nigeria",
   // TODO: add real social links
   social: { facebook: "#", instagram: "#", x: "#" },
-  // TODO: real bank details from the client. Never invent these.
-  bank: { bankName: "", accountName: "Obijiaku Wives in Diaspora Care Foundation", accountNumber: "" },
 };
 
 export const NAV = [
@@ -248,3 +246,13 @@ export const TRUSTEES = [
 // Set DONATIONS_PAUSED=true (in .env / Vercel) to show a "back shortly" notice on /donate and refuse new payments.
 // Remove it or set it to anything else to reopen donations. Existing payments and receipts are not affected.
 export const donationsPaused = () => process.env.DONATIONS_PAUSED === "true";
+
+// Fidelity Bank accounts for bank-transfer gifts. One account per currency.
+export const BANK = {
+  name: "Fidelity Bank",
+  accountName: "Obijiaku Wives in Diaspora Care Foundation",
+  swift: "FIDTNGLA",
+  sortCode: "070100930",
+  address: "Plot 269, Ikenegbu Layout, Owerri, Nigeria",
+  accounts: { NGN: "4110242935", USD: "5250619304", EUR: "5250619328", GBP: "5250619342" },
+} as const;
