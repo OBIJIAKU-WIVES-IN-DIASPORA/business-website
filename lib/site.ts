@@ -22,7 +22,7 @@ export const SITE = {
   updated: "2026-10-07",
   itNumber: "9820301",
   registered: "1 September 2026",
-  email: "adaobijiaku@hotmail.co.uk",
+  email: "support@obijiakuwivesfoundation.org",
   phone: "+234 706 605 4043",
   phoneHref: "+2347066054043",
   address: {
