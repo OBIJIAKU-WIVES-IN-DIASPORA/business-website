@@ -88,3 +88,39 @@ export async function sendTransferInstructions(d: Donation): Promise<void> {
   });
   if (!res.ok) throw new Error(`Resend ${res.status}: ${(await res.text()).slice(0, 200)}`);
 }
+
+// Generic helper for form notifications. Never throws; returns whether Resend accepted the message.
+export async function sendMail(o: { to: string; subject: string; html: string; text: string; replyTo?: string; idempotencyKey?: string }): Promise<boolean> {
+  const key = optionalEnv("RESEND_API_KEY"), from = optionalEnv("MAIL_FROM");
+  if (!key || !from) { console.error("[mail] not configured (RESEND_API_KEY / MAIL_FROM)"); return false; }
+  try {
+    const res = await fetch(optionalEnv("RESEND_API_URL") ?? "https://api.resend.com/emails", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json", ...(o.idempotencyKey ? { "Idempotency-Key": o.idempotencyKey } : {}) },
+      body: JSON.stringify({ from, to: [o.to], reply_to: o.replyTo ?? SITE.email, subject: o.subject, html: o.html, text: o.text }),
+    });
+    if (!res.ok) { console.error("[mail] Resend rejected the message:", res.status, (await res.text()).slice(0, 200)); return false; }
+    return true;
+  } catch (e) { console.error("[mail] send failed:", e instanceof Error ? e.message : e); return false; }
+}
+
+const shell = (title: string, inner: string) => `<div style="font-family:Arial,sans-serif;max-width:560px;margin:auto;padding:24px;color:#17261c"><h2 style="margin:0 0 16px">${esc(title)}</h2>${inner}<p style="font-size:12px;color:#6b756e;margin-top:28px">${esc(SITE.name)} · CAC IT No. ${esc(SITE.itNumber)}</p></div>`;
+const table = (rows: [string, string][]) => `<table style="width:100%;border-collapse:collapse;font-size:14px">${rows.map(([k, v]) => `<tr><td style="padding:8px 0;border-bottom:1px solid #e3e0d2;color:#6b756e;width:130px;vertical-align:top">${esc(k)}</td><td style="padding:8px 0;border-bottom:1px solid #e3e0d2;white-space:pre-wrap">${esc(v)}</td></tr>`).join("")}</table>`;
+
+// 1) to the foundation, 2) a thank-you copy to the person who wrote.
+export async function sendFormEmails(kind: "contact" | "volunteer", f: { name: string; email: string; fields: [string, string][] }) {
+  const label = kind === "contact" ? "contact message" : "volunteer application";
+  const rows: [string, string][] = [["Name", f.name], ["Email", f.email], ...f.fields];
+  const team = await sendMail({
+    to: optionalEnv("NOTIFY_EMAIL") ?? SITE.email, replyTo: f.email, subject: `New ${label} from ${f.name}`,
+    html: shell(`New ${label}`, table(rows) + `<p style="font-size:13px;color:#6b756e">Reply to this email to answer ${esc(f.name)} directly.</p>`),
+    text: `New ${label}\n\n${rows.map(([k, v]) => `${k}: ${v}`).join("\n")}`,
+  });
+  const first = f.name.split(" ")[0];
+  const ack = await sendMail({
+    to: f.email, subject: kind === "contact" ? "We have received your message" : "Thank you for offering to volunteer",
+    html: shell(`Thank you, ${first} 💚`, `<p style="line-height:1.6">${kind === "contact" ? "We have received your message and will reply as soon as we can." : "We are so grateful that you want to volunteer. We have received your details and will be in touch soon."}</p><p style="line-height:1.6">If you need anything in the meantime, write to ${esc(SITE.email)}.</p>`),
+    text: `Thank you, ${first}! We have received your ${label} and will be in touch soon. Questions? ${SITE.email}`,
+  });
+  return { team, ack };
+}

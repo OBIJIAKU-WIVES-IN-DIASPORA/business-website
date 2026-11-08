@@ -28,3 +28,22 @@ re-verifies the payment with Flutterwave (amount + currency), marks it successfu
 **Reporting API** (successful donations only; send `Authorization: Bearer $ADMIN_API_KEY`)
 - `GET /api/donations`: history. Filters: `q` (name, email, receipt, reference), `country` (NG or Nigeria), `cause`, `currency`, `from`, `to` (YYYY-MM-DD, inclusive), `minAmount`, `maxAmount` (need `currency`). Paging: `page`, `limit` (max 100). Sort: `sort=date|amount`, `order=asc|desc`.
 - `GET /api/donations/summary`: totals per currency (sum, count, average, largest), unique donors, and breakdowns by cause, country and month. Same filters.
+
+## Database user for the public site (MongoDB Atlas)
+The public site connects with a limited user. Grant it, in Atlas > Database Access (custom role):
+- `donations`: find, insert, **update** (card payments are marked successful with an update)
+- `counters`: find, update (receipt numbers)
+- `contactMessages`, `volunteers`: insert (optional; forms still email the team without it)
+
+The site no longer tries to create indexes at runtime. Create them once with an admin user (mongosh):
+
+    use foundation
+    db.donations.createIndex({ txRef: 1 }, { unique: true })
+    db.donations.createIndex({ receiptNo: 1 }, { unique: true, sparse: true })
+    db.donations.createIndex({ status: 1, paidAt: -1 })
+    db.donations.createIndex({ "donor.email": 1 })
+
+## Email
+Donation instructions and receipts, contact messages and volunteer applications are sent with Resend
+(`RESEND_API_KEY`, `MAIL_FROM` on a verified domain). `NOTIFY_EMAIL` receives contact/volunteer messages and a copy of receipts.
+Set all three in Vercel > Settings > Environment Variables for Production, then redeploy.

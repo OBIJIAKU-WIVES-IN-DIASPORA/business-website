@@ -6,35 +6,47 @@ import { CURRENCIES, formatMoney, isCurrency } from "./currency";
 import { isCountry } from "./countries";
 import { randomInt } from "node:crypto";
 import { donations } from "./db";
-import { sendTransferInstructions } from "./mail";
+import { sendFormEmails, sendTransferInstructions } from "./mail";
 import { newTxRef } from "./donations";
 import { createPaymentLink } from "./flutterwave";
 
 // Form handlers. They validate input on the server and return a message.
-// TODO: connect to an email service (e.g. Resend) or database so submissions reach the foundation.
-// Until then submissions are only logged on the server.
 
 export type FormState = { ok: boolean; message: string; reference?: string; emailed?: boolean };
 
 const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const str = (v: FormDataEntryValue | null) => (typeof v === "string" ? v.trim() : "");
 
+// Contact and volunteer forms: email the foundation (reply-to is the visitor) and send the visitor a thank-you copy.
+// Also saved in MongoDB when the database user allows it, so the admin portal can list them later.
+async function saveForm(collection: string, doc: Record<string, unknown>) {
+  try {
+    const { formsCollection } = await import("./db");
+    await (await formsCollection(collection)).insertOne({ ...doc, createdAt: new Date() });
+  } catch (e) { console.warn(`[${collection}] not saved to the database (email is still sent):`, e instanceof Error ? e.message.slice(0, 100) : e); }
+}
+
 export async function submitContact(_: FormState, fd: FormData): Promise<FormState> {
   if (str(fd.get("website"))) return { ok: true, message: "Thank you." }; // honeypot
-  const name = str(fd.get("name")), email = str(fd.get("email")), message = str(fd.get("message"));
-  if (name.length < 2 || !emailRe.test(email) || message.length < 10 || message.length > 3000)
+  const name = str(fd.get("name")).slice(0, 100), email = str(fd.get("email")).toLowerCase(), message = str(fd.get("message"));
+  if (name.length < 2 || !emailRe.test(email) || email.length > 200 || message.length < 10 || message.length > 3000)
     return { ok: false, message: "Please enter your name, a valid email and a message of at least 10 characters." };
-  console.log("[contact]", { name, email });
-  return { ok: true, message: "Thank you. Your message has been received and we will reply soon." };
+  await saveForm("contactMessages", { name, email, message });
+  const { team } = await sendFormEmails("contact", { name, email, fields: [["Message", message]] });
+  if (!team) return { ok: false, message: `Sorry, we could not send your message just now. Please email us at ${SITE.email}.` };
+  return { ok: true, message: "Thank you. Your message has been received and we will reply soon. We have also emailed you a confirmation." };
 }
 
 export async function submitVolunteer(_: FormState, fd: FormData): Promise<FormState> {
   if (str(fd.get("website"))) return { ok: true, message: "Thank you." };
-  const name = str(fd.get("name")), email = str(fd.get("email")), phone = str(fd.get("phone")), interest = str(fd.get("interest"));
-  if (name.length < 2 || !emailRe.test(email) || phone.length < 7 || !interest)
+  const name = str(fd.get("name")).slice(0, 100), email = str(fd.get("email")).toLowerCase(), phone = str(fd.get("phone")).slice(0, 40);
+  const interest = str(fd.get("interest")).slice(0, 80), about = str(fd.get("about")).slice(0, 2000);
+  if (name.length < 2 || !emailRe.test(email) || email.length > 200 || phone.length < 7 || !interest)
     return { ok: false, message: "Please complete your name, email, phone number and area of interest." };
-  console.log("[volunteer]", { name, email, interest });
-  return { ok: true, message: "Thank you for offering to volunteer! We will contact you soon." };
+  await saveForm("volunteers", { name, email, phone, interest, about });
+  const { team } = await sendFormEmails("volunteer", { name, email, fields: [["Phone", phone], ["Interested in", interest], ["About them", about || "-"]] });
+  if (!team) return { ok: false, message: `Sorry, we could not send your application just now. Please email us at ${SITE.email}.` };
+  return { ok: true, message: "Thank you for offering to volunteer! We will contact you soon. We have also emailed you a confirmation." };
 }
 
 export async function startDonation(_: FormState, fd: FormData): Promise<FormState> {

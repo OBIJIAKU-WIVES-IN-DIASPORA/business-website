@@ -41,9 +41,18 @@ export async function donations(): Promise<Collection<Donation>> {
     col.createIndex({ status: 1, cause: 1, paidAt: -1 }),
     col.createIndex({ "donor.email": 1 }),
     col.createIndex({ receiptNo: 1 }, { unique: true, sparse: true }),
-  ]).then(() => undefined);
+  ]).then(() => undefined, (e) => {
+    // The public site's database user may be limited to find/insert/update. Missing indexes must never block a donation:
+    // create them once with an admin user (see README) and this step quietly does nothing.
+    console.warn("[db] could not ensure donation indexes (continuing):", e instanceof Error ? e.message.slice(0, 120) : e);
+  });
   await g._indexes;
   return col;
+}
+
+// Other public-form collections (contact messages, volunteer applications). Insert-only use.
+export async function formsCollection(name: string) {
+  return (await client()).db(optionalEnv("MONGODB_DB") ?? "obijiaku").collection(name);
 }
 
 export async function nextReceiptNumber(): Promise<string> {
